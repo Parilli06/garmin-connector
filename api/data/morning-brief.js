@@ -12,16 +12,12 @@ module.exports = async function handler(req, res) {
                 await garmin.login()
       const dateObj = new Date(date + 'T12:00:00')
 
-      const [sleepRes, hrvRes, batteryRes] = await Promise.allSettled([
-              garmin.getSleepData(dateObj),
-              garmin.getHrvData(dateObj),
-              garmin.getBodyBattery(dateObj),
-            ])
+              const safeCall = async (fn) => { try { return await fn() } catch(e) { console.log('Garmin call failed:', e.message); return null } }
+                const sleep = await safeCall(() => garmin.getSleepData(dateObj))
+                const battery = await safeCall(() => garmin.getBodyBattery(dateObj))
+                const hrv = null // getHrvData not available in garmin-connect v1.6.2
 
-      const sleep = sleepRes.status === 'fulfilled' ? sleepRes.value : null
-          const hrv = hrvRes.status === 'fulfilled' ? hrvRes.value : null
-          const battery = batteryRes.status === 'fulfilled' ? batteryRes.value : null
-
+        
       res.json({
               sleep_score: sleep?.dailySleepDTO?.sleepScores?.overall?.value ?? null,
               hrv: hrv?.hrvSummary?.lastNight ?? null,

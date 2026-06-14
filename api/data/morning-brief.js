@@ -10,6 +10,7 @@ module.exports = async function handler(req, res) {
     try {
         const garmin = new GarminConnect({ username: process.env.GARMIN_EMAIL, password: process.env.GARMIN_PASSWORD })
                 await garmin.login()
+                console.log('METHODS:', Object.getOwnPropertyNames(Object.getPrototypeOf(garmin)).filter(m => m.startsWith('get')))
       const dateObj = new Date(date + 'T12:00:00')
 
               const safeCall = async (fn) => { try { return await fn() } catch(e) { console.log('Garmin call failed:', e.message); return null } }

@@ -1,0 +1,8 @@
+{
+    "name": "garmin-connector",
+    "version": "1.0.0",
+    "type": "module",
+    "dependencies": {
+          "garmin-connect": "^2.1.0"
+    }
+}

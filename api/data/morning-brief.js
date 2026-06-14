@@ -8,9 +8,8 @@ module.exports = async function handler(req, res) {
     const date = req.query.date || new Date().toISOString().split('T')[0]
 
     try {
-          const garmin = new GarminConnect()
-          await garmin.login(process.env.GARMIN_EMAIL, process.env.GARMIN_PASSWORD)
-
+        const garmin = new GarminConnect({ username: process.env.GARMIN_EMAIL, password: process.env.GARMIN_PASSWORD })
+                await garmin.login()
       const dateObj = new Date(date + 'T12:00:00')
 
       const [sleepRes, hrvRes, batteryRes] = await Promise.allSettled([
